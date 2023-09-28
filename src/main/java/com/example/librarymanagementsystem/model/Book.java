@@ -14,6 +14,7 @@ import java.util.List;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id

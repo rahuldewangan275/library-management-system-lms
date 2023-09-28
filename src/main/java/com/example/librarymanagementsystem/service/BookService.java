@@ -9,6 +9,7 @@ import com.example.librarymanagementsystem.model.Author;
 import com.example.librarymanagementsystem.model.Book;
 import com.example.librarymanagementsystem.repository.AuthorRepository;
 import com.example.librarymanagementsystem.repository.BookRepository;
+import com.example.librarymanagementsystem.transformer.BookTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,36 +24,23 @@ public class BookService {
     @Autowired
     AuthorRepository authorRepository;
     public BookResponse addBook(BookRequest bookRequest) {
-
-
-        // converting dto to Book Object(Model Object)
-        Book book = new Book();
-        book.setTitle(bookRequest.getTitle());
-        book.setPages(bookRequest.getPages());
-        book.setGenre(bookRequest.getGenre());
-        book.setCost(bookRequest.getCost());
-
-        // finding author present or not
+        //finding author present or not
         Optional<Author> authorOptional = Optional.ofNullable(authorRepository.findBYEmail(bookRequest.getAuthorEmail()));
         if(authorOptional.isEmpty()){
-            throw new AuthorNotFoundException("Invalid Author Id");
+        throw new AuthorNotFoundException("Invalid Author Id");
         }
-
+        //converting dto to Book Object(Model Object)
+        Book book = BookTransformer.BookRequestToBook(bookRequest);
         Author author = authorOptional.get();
         book.setAuthor(author);
         author.getBooks().add(book);
         authorRepository.save(author); // saved both author and book
 
         //converting book(model) object to response dto
-        BookResponse bookResponse = new BookResponse();
-        bookResponse.setTitle(book.getTitle());
-        bookResponse.setPages(book.getPages());
-        bookResponse.setGenre(book.getGenre());
-        bookResponse.setCost(book.getCost());
-        bookResponse.setAuthorName(author.getName());
-
+        BookResponse bookResponse = BookTransformer.BookToBookResponse(book);
         return bookResponse;
     }
+
 
     public String deleteBook(int id) {
         Optional<Book> optional = bookRepository.findById(id);
