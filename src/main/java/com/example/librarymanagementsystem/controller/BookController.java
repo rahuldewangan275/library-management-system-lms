@@ -1,5 +1,7 @@
 package com.example.librarymanagementsystem.controller;
 
+import com.example.librarymanagementsystem.DTO.requestDTO.BookRequest;
+import com.example.librarymanagementsystem.DTO.responseDTO.BookResponse;
 import com.example.librarymanagementsystem.Enum.Genre;
 import com.example.librarymanagementsystem.exception.AuthorNotFoundException;
 import com.example.librarymanagementsystem.exception.BookNotFoundException;
@@ -18,9 +20,9 @@ public class BookController {
     @Autowired
     BookService bookService;
     @PostMapping("/add-book")
-    public ResponseEntity addBook(@RequestBody  Book book){
+    public ResponseEntity addBook(@RequestBody BookRequest bookRequest){
         try{
-            String response = bookService.addBook(book);
+            BookResponse response = bookService.addBook(bookRequest);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         catch(AuthorNotFoundException e){

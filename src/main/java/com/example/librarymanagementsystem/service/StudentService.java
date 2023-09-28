@@ -1,5 +1,7 @@
 package com.example.librarymanagementsystem.service;
 
+import com.example.librarymanagementsystem.DTO.requestDTO.StudentRequest;
+import com.example.librarymanagementsystem.DTO.responseDTO.StudentResponse;
 import com.example.librarymanagementsystem.Enum.CardStatus;
 import com.example.librarymanagementsystem.Enum.Gender;
 import com.example.librarymanagementsystem.model.LibraryCard;
@@ -17,19 +19,33 @@ import java.util.UUID;
 public class StudentService {
     @Autowired
     StudentRepository studentRepository;
-    public String addStudent(Student student) {
+    public StudentResponse addStudent(StudentRequest studentRequest) {
+        Student student = new Student();
+        student.setName(studentRequest.getName());
+        student.setAge(studentRequest.getAge());
+        student.setGender(studentRequest.getGender());
+        student.setEmail(studentRequest.getEmail());
+
+
         LibraryCard libraryCard = new LibraryCard();
         libraryCard.setCardNo(String.valueOf(UUID.randomUUID()));
         libraryCard.setCardStatus(CardStatus.ACTIVE);
-      libraryCard.setStd(student);
+        libraryCard.setStd(student);
 
         student.setLibraryCard(libraryCard);
+
         Student response = studentRepository.save(student);
+
         if(response != null){
-            return "student added Successfully";
+            StudentResponse studentResponse = new StudentResponse();
+            studentResponse.setAge(student.getAge() );
+            studentResponse.setName(response.getName());
+            studentResponse.setMessage("student added successfully");
+            return studentResponse;
         }
-        return "student not added";
+        return null;
     }
+
 
     public Student getStudent(int regNo) {
         try{

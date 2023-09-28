@@ -1,5 +1,7 @@
 package com.example.librarymanagementsystem.service;
 
+import com.example.librarymanagementsystem.DTO.requestDTO.BookRequest;
+import com.example.librarymanagementsystem.DTO.responseDTO.BookResponse;
 import com.example.librarymanagementsystem.Enum.Genre;
 import com.example.librarymanagementsystem.exception.AuthorNotFoundException;
 import com.example.librarymanagementsystem.exception.BookNotFoundException;
@@ -20,8 +22,18 @@ public class BookService {
     BookRepository bookRepository;
     @Autowired
     AuthorRepository authorRepository;
-    public String addBook(Book book) {
-        Optional<Author> authorOptional = authorRepository.findById(book.getAuthor().getId());
+    public BookResponse addBook(BookRequest bookRequest) {
+
+
+        // converting dto to Book Object(Model Object)
+        Book book = new Book();
+        book.setTitle(bookRequest.getTitle());
+        book.setPages(bookRequest.getPages());
+        book.setGenre(bookRequest.getGenre());
+        book.setCost(bookRequest.getCost());
+
+        // finding author present or not
+        Optional<Author> authorOptional = Optional.ofNullable(authorRepository.findBYEmail(bookRequest.getAuthorEmail()));
         if(authorOptional.isEmpty()){
             throw new AuthorNotFoundException("Invalid Author Id");
         }
@@ -29,9 +41,17 @@ public class BookService {
         Author author = authorOptional.get();
         book.setAuthor(author);
         author.getBooks().add(book);
-
         authorRepository.save(author); // saved both author and book
-        return "book Added Successfully";
+
+        //converting book(model) object to response dto
+        BookResponse bookResponse = new BookResponse();
+        bookResponse.setTitle(book.getTitle());
+        bookResponse.setPages(book.getPages());
+        bookResponse.setGenre(book.getGenre());
+        bookResponse.setCost(book.getCost());
+        bookResponse.setAuthorName(author.getName());
+
+        return bookResponse;
     }
 
     public String deleteBook(int id) {

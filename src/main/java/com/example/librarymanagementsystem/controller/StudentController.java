@@ -1,5 +1,7 @@
 package com.example.librarymanagementsystem.controller;
 
+import com.example.librarymanagementsystem.DTO.requestDTO.StudentRequest;
+import com.example.librarymanagementsystem.DTO.responseDTO.StudentResponse;
 import com.example.librarymanagementsystem.model.LibraryCard;
 import com.example.librarymanagementsystem.model.Student;
 import com.example.librarymanagementsystem.service.StudentService;
@@ -17,8 +19,8 @@ public class StudentController {
     @Autowired
     StudentService studentService ;
     @PostMapping("/add")
-    public ResponseEntity addStudent(@RequestBody Student student){
-        String response = studentService.addStudent(student);
+    public ResponseEntity addStudent(@RequestBody StudentRequest studentRequest){
+        StudentResponse response = studentService.addStudent(studentRequest);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
