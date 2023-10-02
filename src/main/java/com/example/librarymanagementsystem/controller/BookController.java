@@ -5,8 +5,7 @@ import com.example.librarymanagementsystem.DTO.responseDTO.BookResponse;
 import com.example.librarymanagementsystem.Enum.Genre;
 import com.example.librarymanagementsystem.exception.AuthorNotFoundException;
 import com.example.librarymanagementsystem.exception.BookNotFoundException;
-import com.example.librarymanagementsystem.model.Book;
-import com.example.librarymanagementsystem.service.BookService;
+import com.example.librarymanagementsystem.service.impl.BookServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +17,11 @@ import java.util.List;
 @RequestMapping("/book")
 public class BookController {
     @Autowired
-    BookService bookService;
+    BookServiceImpl bookServiceImpl;
     @PostMapping("/add-book")
     public ResponseEntity addBook(@RequestBody BookRequest bookRequest){
         try{
-            BookResponse response = bookService.addBook(bookRequest);
+            BookResponse response = bookServiceImpl.addBook(bookRequest);
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
         catch(AuthorNotFoundException e){
@@ -35,7 +34,7 @@ public class BookController {
     @DeleteMapping("/delete-book")
     public String deleteBook(@RequestParam("id") int id){
         try{
-            String response = bookService.deleteBook(id);
+            String response = bookServiceImpl.deleteBook(id);
             return response;
         }catch(BookNotFoundException e){
             return e.getMessage();
@@ -46,7 +45,7 @@ public class BookController {
     @GetMapping("/get-books-by-genre-name")
     public List<String>getBooksByGenreName(@RequestParam("genre") Genre genre){
 
-            List<String> books = bookService.getBooksByGenreName(genre);
+            List<String> books = bookServiceImpl.getBooksByGenreName(genre);
             return books;
 
     }

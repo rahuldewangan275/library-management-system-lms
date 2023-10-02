@@ -1,5 +1,6 @@
 package com.example.librarymanagementsystem.model;
 
+import com.example.librarymanagementsystem.Enum.TransactionStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -14,6 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@Builder
 public class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,6 +25,7 @@ public class Transaction {
 
     @CreationTimestamp
     Date date;
+    TransactionStatus transactionStatus;
 
     @ManyToOne
     @JoinColumn

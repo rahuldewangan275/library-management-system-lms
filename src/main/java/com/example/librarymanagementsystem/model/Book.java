@@ -29,7 +29,7 @@ public class Book {
 
     double cost;
 
-    boolean issued;
+    boolean IsIssued;
 
     @ManyToOne
     @JoinColumn // adding fk
